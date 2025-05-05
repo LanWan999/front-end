@@ -1,7 +1,8 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './NavBar.module.scss'
+import { useCart } from '../../contexts/CartContext';
+import { useEffect } from 'react';
 
 
 const Navbar: React.FC = () => {
@@ -9,19 +10,38 @@ const Navbar: React.FC = () => {
   const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
+  const { mergeGuestCartOnLogin } = useCart()
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (user && token) {
+      mergeGuestCartOnLogin(token); // Merge guest cart into server cart
+    }
+  }, [user]);
+
   const handleLogout = () => {
     logout();           
     navigate('/login'); 
   };
 
+
   return (
     <nav className={styles.navbar}>
+      <div className={styles.navLogo}>
+        <Link to="/">
+          <img src="/logo.png" alt="logo"  style={{width: "60px"}}/>
+        </Link>
+        <div>Capy Bookshop</div>
+      </div>
       <div className={styles.navLinks}>
         <Link to="/" className={styles.navLink}>Home</Link>
         <Link to="/books" className={styles.navLink}>Books</Link>
-        {/* <Link to="/capybaras">Capybaras</Link> */}
-        {/* <Link to="/merch">Merch</Link> */}
-        {/* <Link to="/cafe">Cafe</Link> */}
+        <Link to="/cafe" className={styles.navLink}>Cafe</Link>
+        <Link to="/merch" className={styles.navLink}>Merch</Link>
+        <Link to="/capybaras" className={styles.navLink}>Capybaras</Link>
+
+      </div>
+      <div className={styles.navLinks}>
         {isAdmin && <Link to="/admin" className={styles.navLink}>Admin Page</Link>}
 
         {!user ? (
@@ -31,18 +51,14 @@ const Navbar: React.FC = () => {
           </>
         ) : (
           <>
-            <Link to={`/users/${user._id || user.id}` } className={styles.navLink}>Welcome, {user.username}</Link>
+            <Link to={`/users/${user._id}` } className={styles.navLink}>Welcome, {user.username} !</Link>
             <button className={styles.navButton} onClick={handleLogout}>Logout</button>
           </>
         )}
-
-        {isAdmin && (
-          <>
-            <Link to="/users" className={styles.navLink}>Users</Link>
-            <Link to="/admin/panel" className={styles.navLink}>Admin Panel</Link>
-          </>
-        )}  
       </div>
+      <Link to="/cart">
+          <img src="/cartImage.png" alt="cart image"  style={{width: "20px"}}/>
+      </Link>
     </nav>
   );
 };

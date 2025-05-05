@@ -84,17 +84,9 @@ const AdminPage = () => {
                     </tbody>
                 </table>
 
-                <h2>Content Management</h2>
-                <ul>
-                    <li><button onClick={() => navigate('/games/create')}>Create Game</button></li>
-                    <li><button onClick={() => navigate('/subjects/create')}>Create Subject</button></li>
-                    <li><button onClick={() => navigate('/articles/create')}>Create Article</button></li>
-                    <li><button onClick={() => navigate('/genres/create')}>Create Genre</button></li>
-                    <li><button onClick={() => navigate('/studios/create')}>Create Studio</button></li>
-                    <li><button onClick={() => navigate('/reviews/create')}>Create Review</button></li>
-                    <li><button onClick={() => navigate('/comments/create')}>Create Comment</button></li>
-                </ul>
+                
             </div>
+            <h2>Content Management</h2>
             <BookForm />
         </div>
     )

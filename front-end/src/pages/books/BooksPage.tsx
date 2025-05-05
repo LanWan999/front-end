@@ -3,6 +3,8 @@ import { Link } from "react-router-dom"
 import { Book, Genre } from "../../types/book"
 import api from "../../api"
 import styles from "./BooksPage.module.scss"
+import { useCart } from "../../contexts/CartContext"
+import { Product } from "../../types/cart"
 
 const BooksPage = () => {
     const [books, setBooks] = useState<Book[]>([])
@@ -48,6 +50,25 @@ const BooksPage = () => {
     ? books.filter(book => book.genres.some(genre => genre._id === selectedGenre))
     : books;
 
+    const { addProduct } = useCart();
+
+    const mapBookToProduct = (book: Book): Product => ({
+        _id: book._id,
+        name: book.title,
+        image: book.cover,
+        price: book.price,
+        stock: 1, 
+        type: 'book',
+        author: book.author,
+        genres: book.genres,
+    });
+
+    const handleAddToCart = (book: Book) => {
+        const product = mapBookToProduct(book);
+        addProduct(product);
+    };
+
+
     if (loading) {
         return <div>Loading...</div>
     }
@@ -82,6 +103,7 @@ const BooksPage = () => {
                                     <span >Genre:</span> {book.genres.map(genre => genre.title).join(', ')}
                                 </p>
                             </div>
+                            <button onClick={() => handleAddToCart(book)}>Add to Cart</button>
                         </div>
                     </div>
                 ))}

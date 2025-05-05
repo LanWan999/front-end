@@ -1,16 +1,29 @@
 .navbar {
-    background-color: #333;
+    background-color: #52a8a8;
     color: white; 
     padding: 1rem; 
     display: flex;
     justify-content: center; 
     align-items: center;
     font-family: Arial, sans-serif;
+    gap: 50px;
+  }
+
+  .navLogo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #00ccf0;
+    padding: 5px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    
   }
   
   .navLinks {
     display: flex;
     gap: 1rem; 
+    align-items: center;
   }
   
   .navLink {
@@ -20,12 +33,12 @@
     transition: color 0.3s ease; 
   
     &:hover {
-      color: #f0a500; 
+      color: #0090f0; 
     }
   }
   
   .navButton {
-    background-color: #f0a500;
+    background-color: #00ccf0;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -50,3 +63,4 @@
       gap: 0.5rem;
     }
 }
+
