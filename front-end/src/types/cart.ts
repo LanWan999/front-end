@@ -4,7 +4,7 @@ export type Product = {
     image: string;
     price: number;
     stock: number;
-    type: 'book' | 'plushy' | 'apparel' | string;
+    type: 'book' | string;
     author?: string;
     genres?: { _id: string; title: string }[];
 }

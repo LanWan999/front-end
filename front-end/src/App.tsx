@@ -13,6 +13,9 @@ import { AuthProvider } from "./contexts/AuthContext"
 import CartPage from "./pages/cart/CartPage"
 import { CartPageContextProvider } from "./contexts/CartContext"
 import Footer from "./components/footer/Footer"
+import CafePage from "./pages/cafe/CafePage"
+import { DessertsPageContextProvider } from "./contexts/DessertContext"
+import { DrinksPageContextProvider } from "./contexts/DrinkContext"
 
 
 
@@ -22,25 +25,30 @@ function App() {
   return (
     <AuthProvider>
       <CartPageContextProvider>
-        <BrowserRouter>
-        <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
+        <DessertsPageContextProvider>
+          <DrinksPageContextProvider>
+            <BrowserRouter>
+            <Navbar />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
 
-            <Route path="/books" element={<BooksPage />} />
-            <Route path="/books/:id" element={<BookPage />} />
-            
+                <Route path="/books" element={<BooksPage />} />
+                <Route path="/books/:id" element={<BookPage />} />
 
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+                <Route path="/cafe" element={<CafePage />} />
+                
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
 
-            <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
+                <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
 
-            <Route path="/cart" element={<CartPage />} />
+                <Route path="/cart" element={<CartPage />} />
 
-          </Routes>
-          <Footer />
-        </BrowserRouter>
+              </Routes>
+              <Footer />
+            </BrowserRouter>
+          </DrinksPageContextProvider>
+        </DessertsPageContextProvider>
       </CartPageContextProvider>
     </AuthProvider>
   )
