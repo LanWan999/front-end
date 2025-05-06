@@ -1,12 +1,12 @@
 import BookForm from "../forms/BookForm"
-import { useNavigate } from 'react-router-dom';
 import { getAllUsers, updateUserRole, deleteUser, User } from '../api/usersApi'
 import { useEffect, useState } from "react";
+import DessertsForm from "../forms/DessertForm";
+import DrinksForm from "../forms/DrinkForm";
 
 const AdminPage = () => {
 
     const [users, setUsers] = useState<User[]>([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
         getAllUsers()
@@ -88,6 +88,8 @@ const AdminPage = () => {
             </div>
             <h2>Content Management</h2>
             <BookForm />
+            <DessertsForm />
+            <DrinksForm />
         </div>
     )
 }

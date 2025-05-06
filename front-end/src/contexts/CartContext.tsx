@@ -79,7 +79,10 @@ export const CartPageContextProvider: React.FC<CartPageContextProviderProps> = (
         }
     }
 
-    const clear = () => dispatch({ type: ActionTypes.CLEAR_CART })
+    const clear = () => {
+        dispatch({ type: ActionTypes.CLEAR_CART })
+        localStorage.removeItem("cart")
+    }
 
 
     const update = (id : Product['_id'], quantity: number) =>  dispatch({ type: ActionTypes.UPDATE_QUANTITY, payload: { id, quantity}  })

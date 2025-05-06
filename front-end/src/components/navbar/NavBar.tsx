@@ -27,12 +27,10 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.navLogo}>
-        <Link to="/">
-          <img src="/logo.png" alt="logo"  style={{width: "60px"}}/>
-        </Link>
+      <Link to="/" className={styles.navLogo}>
+        <img src="/logo.png" alt="logo"  style={{width: "60px"}}/>
         <div>Capy Bookshop</div>
-      </div>
+      </Link>
       <div className={styles.navLinks}>
         <Link to="/" className={styles.navLink}>Home</Link>
         <Link to="/books" className={styles.navLink}>Books</Link>
