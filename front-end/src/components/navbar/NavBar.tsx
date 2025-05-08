@@ -15,13 +15,19 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (user && token) {
-      mergeGuestCartOnLogin(token); // Merge guest cart into server cart
+      mergeGuestCartOnLogin(token); 
     }
   }, [user]);
 
   const handleLogout = () => {
     logout();           
     navigate('/login'); 
+  };
+
+  const goToUserPage = () => {
+    if (user) {
+      navigate(`/users/${user._id}`);
+    }
   };
 
 
@@ -35,8 +41,8 @@ const Navbar: React.FC = () => {
         <Link to="/" className={styles.navLink}>Home</Link>
         <Link to="/books" className={styles.navLink}>Books</Link>
         <Link to="/cafe" className={styles.navLink}>Cafe</Link>
-        <Link to="/merch" className={styles.navLink}>Merch</Link>
         <Link to="/capybaras" className={styles.navLink}>Capybaras</Link>
+        <Link to="/contacts" className={styles.navLink}>Contacts</Link>
 
       </div>
       <div className={styles.navLinks}>
@@ -49,7 +55,7 @@ const Navbar: React.FC = () => {
           </>
         ) : (
           <>
-            <Link to={`/users/${user._id}` } className={styles.navLink}>Welcome, {user.username} !</Link>
+            <Link to={`/users/${user._id}`} className={styles.navLink} onClick={goToUserPage}>Welcome, {user.username} !</Link>
             <button className={styles.navButton} onClick={handleLogout}>Logout</button>
           </>
         )}

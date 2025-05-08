@@ -1,68 +1,68 @@
 .navbar {
-    background-color: #52a8a8;
-    color: white; 
-    padding: 1rem; 
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    font-family: Arial, sans-serif;
-    gap: 50px;
+  background-color: #52a8a8;
+  color: white; 
+  padding: 1rem; 
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  font-family: Arial, sans-serif;
+  gap: 50px;
+}
+
+.navLogo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #00ccf0;
+  padding: 5px 20px;
+  border-radius: 50px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  
+}
+  
+.navLinks {
+  display: flex;
+  gap: 1rem; 
+  align-items: center;
+}
+  
+.navLink {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease; 
+
+  &:hover {
+    color: #0090f0; 
+  }
+}
+  
+.navButton {
+  background-color: #00ccf0;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #d18f00; 
+  }
+}
+  
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column; 
+    align-items: flex-start;
   }
 
-  .navLogo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #00ccf0;
-    padding: 5px 20px;
-    border-radius: 50px;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    
-  }
-  
   .navLinks {
-    display: flex;
-    gap: 1rem; 
-    align-items: center;
+    flex-direction: column; 
+    gap: 0.5rem;
   }
-  
-  .navLink {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease; 
-  
-    &:hover {
-      color: #0090f0; 
-    }
-  }
-  
-  .navButton {
-    background-color: #00ccf0;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  
-    &:hover {
-      background-color: #d18f00; 
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .navbar {
-      flex-direction: column; 
-      align-items: flex-start;
-    }
-  
-    .navLinks {
-      flex-direction: column; 
-      gap: 0.5rem;
-    }
 }
 

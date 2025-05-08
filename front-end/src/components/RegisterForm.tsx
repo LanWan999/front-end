@@ -1,7 +1,7 @@
-// src/pages/RegisterPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser as apiRegisterUser } from '../api/usersApi'; // Import registerUser from API
+import { registerUser as apiRegisterUser } from '../api/usersApi'; 
+import { AxiosError } from 'axios';
 
 const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -12,15 +12,18 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset error on submit
+    setError(null); 
 
     try {
-      // Call registerUser from the API layer
+      
       await apiRegisterUser(username, email, password);
-      navigate('/login'); // Redirect to login page after successful registration
-    } catch (err: any) {
-      // Handle error during registration
-      setError(err.response?.data?.message || 'Registration failed');
+      navigate('/login'); 
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setError(err.response?.data?.message || 'Registration failed');
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 

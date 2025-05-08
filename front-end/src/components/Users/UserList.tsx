@@ -11,7 +11,6 @@ function UserList() {
   const token = localStorage.getItem('token');
   const currentUser = token ? jwtDecode<{ id: string; role: string }>(token) : null;
   const isAdmin = currentUser?.role === 'ADMIN';
-  const isModerator = currentUser?.role === 'MODERATOR';
 
   const fetchUsers = async () => {
     try {
@@ -35,7 +34,7 @@ function UserList() {
     }
   };
 
-  const handleRoleChange = async (userId: string, newRole: 'USER' | 'ADMIN' | 'MODERATOR' ) => {
+  const handleRoleChange = async (userId: string, newRole: 'USER' | 'ADMIN'  ) => {
     if (window.confirm(`Change this user's role to ${newRole}?`)) {
       await changeUserRole(userId, newRole);
       fetchUsers();
@@ -49,20 +48,13 @@ function UserList() {
 
   return (
     <div className="user-list-container">
-      <div className="header">
-        <h2>User Management</h2>
-        <Link to="/register" className="btn-register">
-          + Register New User
-        </Link>
-      </div>
-
       <table className="user-table">
         <thead>
           <tr>
             <th>Name</th>
             <th>Email</th>
-            {(isAdmin || isModerator) && <th>Role</th>}
-            {(isAdmin || isModerator) && <th>Actions</th>}
+            {(isAdmin ) && <th>Role</th>}
+            {(isAdmin ) && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -74,7 +66,7 @@ function UserList() {
                 </Link>
               </td>
               <td>{user.email}</td>
-              {(isAdmin || isModerator) &&
+              {(isAdmin ) &&
               <td>
                 {user.role}
                 {user.role === 'ADMIN'}
@@ -95,12 +87,11 @@ function UserList() {
 
                       <select
                         value={user.role}
-                        onChange={(e) => handleRoleChange(user._id, e.target.value as 'USER' | 'ADMIN' | 'MODERATOR')}
+                        onChange={(e) => handleRoleChange(user._id, e.target.value as 'USER' | 'ADMIN' )}
                         className="role-select"
                       >
                         <option value="USER">User</option>
                         <option value="ADMIN">Admin</option>
-                        <option value="MODERATOR">Moderator</option>
                       </select>
                     </>
                   )}

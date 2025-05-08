@@ -1,8 +1,7 @@
-// src/context/authContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { JwtPayload, AuthContextType } from '../types/login';
-import { loginUser as apiLoginUser } from '../api/usersApi'; // import from your API layer
+import { loginUser as apiLoginUser } from '../api/usersApi'; 
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -11,7 +10,6 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
 });
 
-// Helper function to get current user from token
 function getCurrentUser(): JwtPayload | null {
   const token = localStorage.getItem('token');
   if (!token) return null;
@@ -28,7 +26,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<JwtPayload | null>(getCurrentUser());
 
   useEffect(() => {
-    // This will ensure the user state updates if the token changes
     const handleStorageChange = () => {
       setUser(getCurrentUser());
     };
@@ -36,18 +33,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Login function: uses API method and sets the user state
   const login = async (email: string, password: string) => {
     console.log('Login function called with:', email, password)
     try {
       const token = await apiLoginUser(email, password)
-      console.log('Token after login:', token); // Get token from API
+      console.log('Token after login:', token); 
       if (token) {
-        localStorage.setItem('token', token);  // Store token in localStorage
-        setUser(getCurrentUser());  // Set the user state after decoding the token
+        localStorage.setItem('token', token);  
+        setUser(getCurrentUser());  
       }
     } catch (error) {
-      throw new Error('Login failed'); // Handle any errors from the API
+      console.error('Login error:', error); 
+      throw new Error('Login failed'); 
     }
   };
 

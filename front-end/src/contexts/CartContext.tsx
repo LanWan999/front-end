@@ -99,7 +99,7 @@ export const CartPageContextProvider: React.FC<CartPageContextProviderProps> = (
 
                 if (!product || typeof product !== 'object') {
                     console.warn("Skipping invalid product in cart:", product);
-                    return; // skip this entry
+                    return; 
                 }
     
                 const cartProduct: CartProduct = {
@@ -121,11 +121,11 @@ export const CartPageContextProvider: React.FC<CartPageContextProviderProps> = (
     
         try {
             for (const item of guestCart) {
-                await addToCart(item._id, item.quantity, token); // Save each item to server
+                await addToCart(item._id, item.quantity, token); 
             }
     
-            localStorage.removeItem("cart"); // Clear local guest cart
-            await fetchCart(token); // Fetch updated cart from server
+            localStorage.removeItem("cart"); 
+            await fetchCart(token); 
         } catch (error) {
             console.error("Failed to merge guest cart on login:", error);
         }

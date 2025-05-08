@@ -1,0 +1,50 @@
+.pageContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+  
+.card {
+    background: #fefefe;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+}
+  
+.image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+  
+.name {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+  
+.snack,
+.personality {
+    font-size: 1.1rem;
+    color: #5b5b5b;
+    margin-bottom: 10px;
+}
+  
+.description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+  
+.loading {
+    text-align: center;
+    padding: 60px;
+    font-size: 1.2rem;
+    color: #888;
+}

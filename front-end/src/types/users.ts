@@ -1,5 +1,5 @@
 export interface User {
-    _id?: string;
+    _id: string;
     name?: string;
     surname?: string;
     username: string;
@@ -8,8 +8,20 @@ export interface User {
     age?: number;
     bio?: string;
     avatar?: string;
-    role?: 'USER' | 'ADMIN' | 'MODERATOR';
-    comments?: string[];
-    reviews?: string[];
+    role?: 'USER' | 'ADMIN';
+    favoriteDessert?: {
+        _id?: string;
+        name: string;
+        price: number;
+        image: string;
+        description: string;
+    };
+    favoriteDrink?: {
+        _id?: string;
+        name: string;
+        price: number;
+        image: string;
+        description: string;
+    };
 }
   

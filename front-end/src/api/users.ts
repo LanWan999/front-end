@@ -34,5 +34,5 @@ export const registerUser = (user: Omit<User, '_id'>) =>
 export const updateUser = (id: string, user: Partial<User>) => 
   api.put<User>(`/users/${id}`, user);
 export const deleteUser = (id: string) => api.delete(`/users/${id}`);
-export const changeUserRole = (id: string, role: 'USER' | 'ADMIN' | 'MODERATOR') => 
+export const changeUserRole = (id: string, role: 'USER' | 'ADMIN' ) => 
   api.patch<User>(`/users/${id}/role`, { role });

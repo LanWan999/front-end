@@ -1,166 +1,242 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { getUser, updateUser } from '../../api/users';
-import { User } from '../../types/users';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import api from '../../api'
+import { Drink } from '../../types/drink'
+import { Dessert } from '../../types/dessert'
 
-function UserForm() {
-  const [formData, setFormData] = useState<Partial<User>>({
-    name: '',
-    surname: '',
-    username: '',
-    email: '',
-    password: '',
-    age: undefined,
-    bio: '',
-    avatar: '',
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(true);
-  const { id } = useParams();
-  const navigate = useNavigate();
+type UserFormProps = {
+  editUserData?: {
+    _id?: string;
+    name: string;
+    surname: string;
+    username: string;
+    email: string;
+    age: number;
+    bio: string;
+    avatar: string;
+    favoriteDrink: string;
+    favoriteDessert: string;
+  };
+};
+
+
+const UserForm: React.FC<UserFormProps> = ({ editUserData }) => {
+  const [name, setName] = useState(editUserData?.name ?? '');
+  const [surname, setSurname] = useState<string>('')
+  const [username, setUsername] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [age, setAge] = useState(editUserData?.age ?? '');
+  const [bio, setBio] = useState<string>('')
+  const [avatar, setAvatar] = useState<string>('')
+
+  const [favoriteDrink, setFavoriteDrink] = useState<string>('')
+  const [favoriteDessert, setFavoriteDessert] = useState<string>('')
+
+  const [availableDrinks, setAvailableDrinks] = useState<Drink[]>([]) 
+  const [availableDesserts, setAvailableDesserts] = useState<Dessert[]>([]) 
+
+  const [error, setError] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
-    
-    if (!id || !/^[a-f\d]{24}$/i.test(id)) {
-      navigate('/users');
-      return;
+    if (editUserData) {
+      setName(editUserData.name);
+      setSurname(editUserData.surname);
+      setUsername(editUserData.username);
+      setEmail(editUserData.email);
+      setAge(editUserData.age);
+      setBio(editUserData.bio);
+      setAvatar(editUserData.avatar);
+      setFavoriteDrink(editUserData.favoriteDrink);
+      setFavoriteDessert(editUserData.favoriteDessert);
+    }
+  }, [editUserData]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const drinksResponse = await api.get('/drinks') 
+        const dessertsResponse = await api.get('/desserts') 
+
+        setAvailableDrinks(drinksResponse.data)
+        setAvailableDesserts(dessertsResponse.data)
+      } catch (err) {
+        console.error('Error fetching available items:', err)
+      }
+    }
+    fetchItems()
+  }, [])
+
+  const handleStringInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value)
     }
 
-    getUser(id)
-      .then(res => {
-        setFormData({ ...res.data, password: '' });
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Fetch error:', error);
-        navigate('/users');
-      });
-  }, [id, navigate]);
+  const handleNumberInputChange = (setter: React.Dispatch<React.SetStateAction<number | string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value === '' ? '' : Number(e.target.value)) 
+    }
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    if (!name || !surname || !username || !email || age === '' || !avatar || !favoriteDrink || !favoriteDessert) {
+      setError('All fields are required')
+      return
+    }
+
+    const userData = {
+      name,
+      surname,
+      username,
+      email,
+      password,
+      age: Number(age),
+      bio,
+      avatar,
+      favoriteDrink, 
+      favoriteDessert 
+    }
 
     try {
-      if (id) {
-        const updates = { ...formData };
-        if (!updates.password) {
-          delete updates.password;
-        }
-        await updateUser(id, updates as User);
-        navigate(`/users/${id}`);
-      }
+      setLoading(true);
       
+      const response = await api.post('/users', userData);  
+      console.log('User created successfully:', response.data);
+      navigate('/users'); 
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setErrors({ ...errors, server: error.response?.data.message });
-      }
+      console.error('Registration failed:', error);
+      setError('An error occurred while creating the user');
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>
 
   return (
-          <div className="user-form">
-            <h2>Edit User</h2>
-            {errors.server && <div className="error">{errors.server}</div>}
-            <form onSubmit={handleSubmit}>
-            
-        <div>
-          <label>Name:</label>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-control">
+          <label htmlFor="name">Name:</label>
           <input
             type="text"
-            value={formData.name || ''}
-            onChange={e => setFormData({ ...formData, name: e.target.value })}
+            id="name"
+            value={name}
+            onChange={handleStringInputChange(setName)}
           />
-          {errors.name && <span className="error">{errors.name}</span>}
         </div>
 
-        <div>
-          <label>Surname:</label>
+        <div className="form-control">
+          <label htmlFor="surname">Surname:</label>
           <input
             type="text"
-            value={formData.surname || ''}
-            onChange={e => setFormData({ ...formData, surname: e.target.value })}
+            id="surname"
+            value={surname}
+            onChange={handleStringInputChange(setSurname)}
           />
-          {errors.surname && <span className="error">{errors.surname}</span>}
         </div>
 
-        <div>
-          <label>Username:</label>
+        <div className="form-control">
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
-            value={formData.username || ''}
-            onChange={e => setFormData({ ...formData, username: e.target.value })}
-            required
+            id="username"
+            value={username}
+            onChange={handleStringInputChange(setUsername)}
           />
-          {errors.username && <span className="error">{errors.username}</span>}
         </div>
 
-        <div>
-          <label>Email:</label>
+        <div className="form-control">
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
-            value={formData.email || ''}
-            onChange={e => setFormData({ ...formData, email: e.target.value })}
-            required
+            id="email"
+            value={email}
+            onChange={handleStringInputChange(setEmail)}
           />
-          {errors.email && <span className="error">{errors.email}</span>}
         </div>
 
-        <div>
-          <label>Password:</label>
+        <div className="form-control">
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
-            value={formData.password || ''}
-            onChange={e => setFormData({ ...formData, password: e.target.value })}
+            id="password"
+            value={password}
+            onChange={handleStringInputChange(setPassword)}
           />
-          {errors.password && <span className="error">{errors.password}</span>}
         </div>
 
-        <div>
-          <label>Age:</label>
+        <div className="form-control">
+          <label htmlFor="age">Age:</label>
           <input
             type="number"
-            min="0"
-            value={formData.age || ''}
-            onChange={e => setFormData({ ...formData, age: +e.target.value })}
+            id="age"
+            value={age}
+            onChange={handleNumberInputChange(setAge)}
           />
-          {errors.age && <span className="error">{errors.age}</span>}
         </div>
 
-        <div>
-          <label>Bio:</label>
-          <textarea
-            value={formData.bio || ''}
-            onChange={e => setFormData({ ...formData, bio: e.target.value })}
-          />
-          {errors.bio && <span className="error">{errors.bio}</span>}
-        </div>
-
-        <div>
-          <label>Avatar URL:</label>
+        <div className="form-control">
+          <label htmlFor="bio">Bio:</label>
           <input
-            type="url"
-            value={formData.avatar || ''}
-            onChange={e => setFormData({ ...formData, avatar: e.target.value })}
+            type="text"
+            id="bio"
+            value={bio}
+            onChange={handleStringInputChange(setBio)}
           />
-          {errors.avatar && <span className="error">{errors.avatar}</span>}
         </div>
 
+        <div className="form-control">
+          <label htmlFor="avatar">Avatar URL:</label>
+          <input
+            type="text"
+            id="avatar"
+            value={avatar}
+            onChange={handleStringInputChange(setAvatar)}
+          />
+        </div>
 
-              <button type="submit">Update</button>
-            </form>
-          </div>
-        );
-      }
+        <div className="form-control">
+          <label htmlFor="favoriteDrink">Favorite Drink:</label>
+          <select
+            id="favoriteDrink"
+            value={favoriteDrink}
+            onChange={(e) => setFavoriteDrink(e.target.value)}
+          >
+            <option value="">Select a drink</option>
+            {availableDrinks.map((drink) => (
+              <option key={drink._id} value={drink._id}>
+                {drink.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-export default UserForm;
+        <div className="form-control">
+          <label htmlFor="favoriteDessert">Favorite Dessert:</label>
+          <select
+            id="favoriteDessert"
+            value={favoriteDessert}
+            onChange={(e) => setFavoriteDessert(e.target.value)}
+          >
+            <option value="">Select a dessert</option>
+            {availableDesserts.map((dessert) => (
+              <option key={dessert._id} value={dessert._id}>
+                {dessert.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button type="submit">{editUserData ? 'Update User' : 'Create User'}</button>
+        {error && <p className="error">{error}</p>}
+      </form>
+    </div>
+  )
+}
+
+export default UserForm
