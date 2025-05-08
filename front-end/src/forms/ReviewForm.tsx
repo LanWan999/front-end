@@ -2,6 +2,7 @@ import React, { useReducer, useEffect, useState } from 'react'
 import api from '../api'
 import { reviewFormReducer, initialState as reducerInitialState } from '../contexts/reducers/ReviewReducer'
 import { Capybara } from '../types/capybara'
+import axios from 'axios'
 
 type ReviewFormProps = {
   editReviewData?: {
@@ -87,9 +88,17 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ editReviewData, onSuccess }) =>
   
       if (onSuccess) onSuccess();
     } catch (err) {
-      console.error('Error saving review:', err.response?.data || err.message);
+      if (err instanceof Error) {
+        console.error('Error saving review:', err.message);
+      } else if (axios.isAxiosError(err)) {
+        console.error('Error saving review:', err.response?.data || err.message);
+      } else {
+        console.error('Unexpected error:', err);
+      }
+    
       setError('Failed to save review');
     }
+    
   };
   
 

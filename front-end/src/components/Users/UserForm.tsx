@@ -3,20 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import api from '../../api'
 import { Drink } from '../../types/drink'
 import { Dessert } from '../../types/dessert'
+import { User } from '../../types/users'
 
 type UserFormProps = {
-  editUserData?: {
-    _id?: string;
-    name: string;
-    surname: string;
-    username: string;
-    email: string;
-    age: number;
-    bio: string;
-    avatar: string;
-    favoriteDrink: string;
-    favoriteDessert: string;
-  };
+  editUserData?: User
 };
 
 
@@ -43,17 +33,18 @@ const UserForm: React.FC<UserFormProps> = ({ editUserData }) => {
 
   useEffect(() => {
     if (editUserData) {
-      setName(editUserData.name);
-      setSurname(editUserData.surname);
-      setUsername(editUserData.username);
-      setEmail(editUserData.email);
-      setAge(editUserData.age);
-      setBio(editUserData.bio);
-      setAvatar(editUserData.avatar);
-      setFavoriteDrink(editUserData.favoriteDrink);
-      setFavoriteDessert(editUserData.favoriteDessert);
+      setName(editUserData.name ?? '');
+      setSurname(editUserData.surname ?? '');
+      setUsername(editUserData.username ?? '');
+      setEmail(editUserData.email ?? '');
+      setAge(editUserData.age ?? '');
+      setBio(editUserData.bio ?? '');
+      setAvatar(editUserData.avatar ?? '');
+      setFavoriteDrink(editUserData.favoriteDrink?._id ?? '');
+      setFavoriteDessert(editUserData.favoriteDessert?._id ?? '');
     }
   }, [editUserData]);
+  
 
   useEffect(() => {
     const fetchItems = async () => {
