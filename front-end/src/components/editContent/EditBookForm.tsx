@@ -37,7 +37,14 @@ function EditBookForm({ id, onCancel }: Props) {
   return (
     <div>
       <h2>Editing: {book.title}</h2>
-      <BookForm editBookData={book} />
+      <BookForm
+        editBookData={{
+          ...book,
+          price: book.price.toString(),
+          genres: book.genres.map((genre) => genre.title)
+        }}
+      />
+
       {onCancel && <button onClick={onCancel}>Cancel</button>}
     </div>
   )
