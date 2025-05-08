@@ -5,6 +5,7 @@ import api from "../../api"
 import styles from "./BooksPage.module.scss"
 import { useCart } from "../../contexts/CartContext"
 import { Product } from "../../types/cart"
+import { toast } from 'react-toastify'
 
 const BooksPage = () => {
     const [books, setBooks] = useState<Book[]>([])
@@ -66,6 +67,15 @@ const BooksPage = () => {
     const handleAddToCart = (book: Book) => {
         const product = mapBookToProduct(book);
         addProduct(product);
+        toast.success("Added to cart!", {
+          position: "bottom-left",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
     };
 
 
@@ -99,11 +109,8 @@ const BooksPage = () => {
                             <div >
                                 <p className={styles.bookAuthor}>{book.author}</p>
                                 <p className={styles.bookPrice}>{book.price} €</p>
-                                <p className={styles.bookGenres}>
-                                    <span >Genre:</span> {book.genres.map(genre => genre.title).join(', ')}
-                                </p>
                             </div>
-                            <button onClick={() => handleAddToCart(book)}>Add to Cart</button>
+                            <button onClick={() => handleAddToCart(book)} className={styles.addToCartBtn}>Add to Cart</button>
                         </div>
                     </div>
                 ))}

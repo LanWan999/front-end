@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/usersApi'
 
+interface ApiError {
+  response?: {
+    data?: {
+      message: string;
+    };
+  };
+}
+
 const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -12,13 +20,16 @@ const RegisterPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+  
     try {
-      await registerUser(username, email, password);
+      await registerUser(username, email, password); 
       navigate('/login');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+    } catch (err) {
+      const apiError = err as ApiError;
+      setError(apiError.response?.data?.message || 'Registration failed');
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>

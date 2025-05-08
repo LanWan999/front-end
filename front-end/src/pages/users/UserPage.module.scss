@@ -1,0 +1,87 @@
+.userPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.userHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+  
+.userName {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+  
+.username {
+    font-size: 1.2rem;
+    color: #777;
+}
+  
+.userInfo {
+    width: 100%;
+    margin-bottom: 30px;
+}
+  
+.userInfo p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+  
+.favoriteDessert,
+.favoriteDrink{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+}
+  
+.favoriteDessert h3,
+.favoriteDrink h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+  
+.dessertImage,
+.drinkImage {
+    width: 200px;
+    max-width: 300px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+  
+.favoriteDessert p {
+    font-size: 1rem;
+    color: #333;
+    margin: 5px 0;
+}
+  
+.favoriteDessert strong {
+    font-weight: bold;
+    color: #000;
+}

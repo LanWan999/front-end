@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
-import { createDessert, deleteDessert, fetchAllDesserts, updateDessert } from "..//api/dessertApi"
+import { createDessert, deleteDessert, fetchAllDesserts } from "../api/dessertApi"
 import React from 'react'
 
 export interface CreateDessert {
@@ -19,8 +19,7 @@ type DessertsPageContextType = {
     editDessertData: Dessert | null
     addDessert: (newDessert: CreateDessert) => void
     removeDessert: (id: string) => void
-    editDessert: (dessertData: Dessert) => void
-    getEditDessert: (dessertData: Dessert | null) => void
+    getEditDessert: (drinkData: Dessert | null) => void
 }
 
 const DessertsPageContext = createContext<DessertsPageContextType | undefined>(undefined)
@@ -31,6 +30,7 @@ type DessertsPageContextProviderProps = {
 
 export const DessertsPageContextProvider: React.FC<DessertsPageContextProviderProps> = ({ children }) => {
     const [desserts, setDesserts] = useState<Dessert[]>([])
+
     const [editDessertData, setEditDessertData] = useState<Dessert | null>(null)
 
     useEffect(() => {
@@ -51,35 +51,23 @@ export const DessertsPageContextProvider: React.FC<DessertsPageContextProviderPr
             console.error("Error adding dessert:", error)
         }
     }
+
+    const getEditDessert = (dessertData: Dessert | null) => {
+        setEditDessertData(dessertData)
+    }
     
     const removeDessert = (id: string) => {
         deleteDessert(id)
         setDesserts(prevState => prevState.filter(dessert => dessert.id !== id))
     }
 
-    const editDessert = async (dessertData: Dessert) => {
-        await updateDessert(dessertData)
-
-        setDesserts(prevState => 
-            prevState.map(dessert =>
-                dessert.id === dessertData.id ? dessertData : dessert
-            )
-        )
-        
-        setEditDessertData(null)
-    }
-
-    const getEditDessert = (dessertData: Dessert | null) => {
-        setEditDessertData(dessertData)
-    }
-
     const ctxValue: DessertsPageContextType = {
         dessertsList: desserts,
         editDessertData,
         addDessert,
+        getEditDessert,
         removeDessert,
-        editDessert,
-        getEditDessert
+
     }
 
     return (

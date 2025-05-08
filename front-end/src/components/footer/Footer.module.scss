@@ -1,7 +1,60 @@
+.footerContainer {
+    position: relative;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 40px 20px;
+    width: 100%;
+    overflow: hidden;
+}
+  
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 100%;
+    background-image: url('/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+}
+  
+.contentWrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 20px;
+}
+  
+.logoAndMediaIcons {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+}
+  
+.socialMediaIcons {
+    display: flex;
+    gap: 20px;
+}
+  
 .socialMediaIcon {
     width: 20px;
 }
-
+  
 .logo {
-    width: 50px;
+    width: 100px;
+}
+  
+.pageContainer {
+    display: flex;
+    justify-content: center;
+}
+  
+.copyright {
+    text-align: center;
 }

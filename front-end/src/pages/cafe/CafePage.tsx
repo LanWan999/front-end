@@ -48,22 +48,22 @@ const CafePage = () => {
     return (
         <div className={styles.pageContainer}>
             <div className={styles.sidebar}>
-                <button onClick={() => setView("menu")}>Menu</button>
-                <button onClick={() => setView("opening-hours")}>Opening Hours</button>
+                <button onClick={() => setView("menu")} className={styles.menuButton}>Menu</button>
+                <button onClick={() => setView("opening-hours")} className={styles.workingHoursButton}>Opening Hours</button>
             </div>
 
             {view === "menu" && (
                 <>
-                    <div className={styles.foodCard}>
+                    <div className={styles.foodCategory}>
                         <div>
                             <h2>Desserts</h2>
                             <div>
                                 {desserts.map(dessert => (
-                                    <div key={dessert._id} >
-                                        <strong>{dessert.name}</strong><br />
-                                        <img src={dessert.image} alt={dessert.name} width={100} /><br />
-                                        {dessert.description}<br />
-                                        ${dessert.price.toFixed(2)}
+                                    <div key={dessert._id} className={styles.itemCard}>
+                                        <div className={styles.itemName}>{dessert.name}</div>
+                                        <img src={dessert.image} alt={dessert.name} width={100} className={styles.itemImg}/><br />
+                                        <p className={styles.itemDescription}>{dessert.description}</p>
+                                        {dessert.price.toFixed(2)} €
                                     </div>
                                 ))}
                             </div>
@@ -73,11 +73,11 @@ const CafePage = () => {
                             <h2>Drinks</h2>
                             <div>
                                 {drinks.map(drink => (
-                                    <div key={drink._id}>
-                                        <strong>{drink.name}</strong><br />
-                                        <img src={drink.image} alt={drink.name} width={100} /><br />
-                                        {drink.description}<br />
-                                        ${drink.price.toFixed(2)}
+                                    <div key={drink._id} className={styles.itemCard}>
+                                        <div className={styles.itemName}>{drink.name}</div><br />
+                                        <img src={drink.image} alt={drink.name} width={100} className={styles.itemImg}/><br />
+                                        <p className={styles.itemDescription}>{drink.description}</p>
+                                        {drink.price.toFixed(2)} €
                                     </div>
                                 ))}
                             </div>
@@ -89,7 +89,13 @@ const CafePage = () => {
             {view === "opening-hours" && (
                 <div>
                     <h2>Opening Hours</h2>
-                    <table>
+                    <table className={styles.openingHoursTable}>
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             {openingHours.map(hour => (
                                 <tr key={hour._id}>
@@ -101,6 +107,7 @@ const CafePage = () => {
                     </table>
                 </div>
             )}
+
         </div>
     )
 }

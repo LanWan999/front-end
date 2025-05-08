@@ -3,7 +3,7 @@ import { createDrink, deleteDrink, fetchAllDrinks, updateDrink } from "../api/dr
 import React from 'react'
 
 export interface CreateDrink {
-    id: string
+    _id: string
     image: string
     name: string
     price: number

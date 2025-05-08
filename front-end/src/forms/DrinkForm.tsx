@@ -1,91 +1,88 @@
-import React, { useState } from 'react'
-import { Drink, useDrinks } from '../contexts/DrinkContext'
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import api from '../api'
+import { Drink } from '../types/drink'
 
 type DrinksFormProps = {
-    editDrinkData?: Drink
+  editDrinkData?: Drink
 }
 
-const DrinksForm: React.FC<DrinksFormProps> = (props) => {
-    const { editDrinkData } = props
+const DrinksForm: React.FC<DrinksFormProps> = ({ editDrinkData }) => {
+  const [image, setImage] = useState('')
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState<string>('')
+  const [description, setDescription] = useState('')
+  const [drinkId, setDrinkId] = useState<string | null>(null)
+  const [error, setError] = useState('')
 
-    const { addDrink, editDrink } = useDrinks()
+  useEffect(() => {
+    if (editDrinkData) {
+      setDrinkId(editDrinkData._id) 
+      setImage(editDrinkData.image)
+      setName(editDrinkData.name)
+      setPrice(editDrinkData.price?.toString() ?? '')
+      setDescription(editDrinkData.description)
+    }
+  }, [editDrinkData])
 
-    const [image, setImage] = useState(editDrinkData?.image ?? '')
-    const [name, setName] = useState(editDrinkData?.name ?? '')
-    const [price, setPrice] = useState(editDrinkData?.price ?? '')
-    const [description, setDescription] = useState(editDrinkData?.description ?? '')
+  const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.value)
+  const nameHandler = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)
+  const priceHandler = (e: React.ChangeEvent<HTMLInputElement>) => setPrice(e.target.value)
+  const descriptionHandler = (e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)
 
-    const [formError, setFormError] = useState('')
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
 
-    const imageHandler = (event: React.ChangeEvent<HTMLInputElement>) => setImage(event.target.value)
-    const nameHandler = (event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value)
-    const priceHandler = (event: React.ChangeEvent<HTMLInputElement>) => setPrice (Number(event.target.value))
-    const descriptionHandler = (event: React.ChangeEvent<HTMLInputElement>) => setDescription(event.target.value)
-
-    useEffect(() => {
-        if (editDrinkData) {
-            setImage(editDrinkData.image ?? '')
-            setName(editDrinkData.name ?? '')
-            setPrice(editDrinkData.price ?? '')
-            setDescription(editDrinkData.description ?? '')
-        }
-    }, [editDrinkData])
-
-
-    const formSubmitHandler = (event: React.FormEvent) => {
-        event.preventDefault()
-
-        setFormError('')
-
-        if (!image || !name || !price || !description) {
-            setFormError('Form is invalid')
-            return
-        }
-
-        const drinkData = {
-            image,
-            name,
-            price: typeof price === 'string' ? parseFloat(price) : price,
-            description
-        }
-
-        if (editDrinkData) {
-            const updatedDessertData = { ...drinkData, id: editDrinkData.id}
-            editDrink(updatedDessertData)
-        } else {
-            const newDessertData = { ...drinkData, id: Date.now().toString() }
-            addDrink(newDessertData)
-        }
-
+    if (!name || !description || !image || price === '') {
+      setError('All fields are required')
+      return
     }
 
-    return(
-        <div>
-            <h1>Add drink</h1>
-            <form onSubmit={formSubmitHandler}>
-                <div>
-                    <label htmlFor="image">Image:</label>
-                    <input type="text" name="image" id="image" value={image} onChange={imageHandler}/>
-                </div>
-                <div>
-                    <label htmlFor="name">Name:</label>
-                    <input type="text" name="name" id="name" value={name} onChange={nameHandler}/>
-                </div>
-                <div>
-                    <label htmlFor="price">Price:</label>
-                    <input type="number" name="price" id="price" value={price} onChange={priceHandler}/>
-                </div>
-                <div>
-                    <label htmlFor="description">Description:</label>
-                    <input type="text" name="description" id="description" value={description} onChange={descriptionHandler}/>
-                </div>
+    const drinkData = {
+      image,
+      name,
+      price: parseFloat(price),
+      description,
+    }
 
-                <button className='button-style' type='submit'>{editDrinkData ? "Edit Drink" : 'Add Drink'}</button>
+    try {
+      if (editDrinkData) {
+        await api.put(`/drinks/${drinkId}`, drinkData)
+        console.log('Drink updated successfully')
+      } else {
+        await api.post(`/drinks`, drinkData)
+        console.log('Drink created successfully')
+      }
+    } catch (err) {
+      console.error('Error saving drink:', err)
+      setError('Failed to save drink')
+    }
+  }
 
-                {formError && <p>{formError}</p>}
-            </form>
+  return (
+    <div>
+      <form onSubmit={submitHandler}>
+        <div className="form-control">
+          <label htmlFor="image">Image:</label>
+          <input type="text" id="image" value={image} onChange={imageHandler} />
         </div>
-    )
+        <div className="form-control">
+          <label htmlFor="name">Name:</label>
+          <input type="text" id="name" value={name} onChange={nameHandler} />
+        </div>
+        <div className="form-control">
+          <label htmlFor="price">Price:</label>
+          <input type="number" id="price" value={price} onChange={priceHandler} />
+        </div>
+        <div className="form-control">
+          <label htmlFor="description">Description:</label>
+          <input type="text" id="description" value={description} onChange={descriptionHandler} />
+        </div>
+        <button type="submit">Update Drink</button>
+        
+        {error && <p className="error">{error}</p>}
+      </form>
+    </div>
+  )
 }
+
 export default DrinksForm

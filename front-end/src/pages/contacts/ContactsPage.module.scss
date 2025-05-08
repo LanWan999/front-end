@@ -1,0 +1,58 @@
+
+.contactContainer {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.contactInfo {
+    margin-top: 20px;
+    padding: 20px;
+
+    h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .address, .email, .phone {
+        margin-bottom: 20px;
+    }
+}
+
+.map {
+    margin-top: 30px;
+  
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+  
+    .mapEmbed {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; 
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    }
+}
+

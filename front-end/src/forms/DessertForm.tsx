@@ -1,91 +1,87 @@
-import React, { useState } from 'react'
-import { Dessert, useDesserts } from '../contexts/DessertContext'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import api from '../api'
+import { Dessert } from '../types/dessert'
 
 type DessertsFormProps = {
-    editDessertData?: Dessert
+  editDessertData?: Dessert
 }
 
-const DessertsForm: React.FC<DessertsFormProps> = (props) => {
-    const { editDessertData } = props
+const DessertsForm: React.FC<DessertsFormProps> = ({ editDessertData }) => {
+  const [image, setImage] = useState('')
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState<string>('')
+  const [description, setDescription] = useState('')
+  const [dessertId, setDessertId] = useState<string | null>(null)
+  const [error, setError] = useState('')
 
-    const { addDessert, editDessert } = useDesserts()
+  useEffect(() => {
+    if (editDessertData) {
+      setDessertId(editDessertData._id)
+      setImage(editDessertData.image)
+      setName(editDessertData.name)
+      setPrice(editDessertData.price?.toString() ?? '')
+      setDescription(editDessertData.description)
+    }
+  }, [editDessertData])
 
-    const [image, setImage] = useState(editDessertData?.image ?? '')
-    const [name, setName] = useState(editDessertData?.name ?? '')
-    const [price, setPrice] = useState(editDessertData?.price ?? '')
-    const [description, setDescription] = useState(editDessertData?.description ?? '')
+  const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.value)
+  const nameHandler = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)
+  const priceHandler = (e: React.ChangeEvent<HTMLInputElement>) => setPrice(e.target.value)
+  const descriptionHandler = (e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)
 
-    const [formError, setFormError] = useState('')
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
 
-    const imageHandler = (event: React.ChangeEvent<HTMLInputElement>) => setImage(event.target.value)
-    const nameHandler = (event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value)
-    const priceHandler = (event: React.ChangeEvent<HTMLInputElement>) => setPrice (Number(event.target.value))
-    const descriptionHandler = (event: React.ChangeEvent<HTMLInputElement>) => setDescription(event.target.value)
-
-    useEffect(() => {
-        if (editDessertData) {
-            setImage(editDessertData.image ?? '')
-            setName(editDessertData.name ?? '')
-            setPrice(editDessertData.price ?? '')
-            setDescription(editDessertData.description ?? '')
-        }
-    }, [editDessertData])
-
-
-    const formSubmitHandler = (event: React.FormEvent) => {
-        event.preventDefault()
-
-        setFormError('')
-
-        if (!image || !name || !price || !description) {
-            setFormError('Form is invalid')
-            return
-        }
-
-        const dessertData = {
-            image,
-            name,
-            price: typeof price === 'string' ? parseFloat(price) : price,
-            description
-        }
-
-        if (editDessertData) {
-            const updatedDessertData = { ...dessertData, id: editDessertData.id}
-            editDessert(updatedDessertData)
-        } else {
-            const newDessertData = { ...dessertData, id: Date.now().toString() }
-            addDessert(newDessertData)
-        }
-
+    if (!name || !description || !image || price === '') {
+      setError('All fields are required')
+      return
     }
 
-    return(
-        <div>
-            <h1>Add dessert</h1>
-            <form onSubmit={formSubmitHandler}>
-                <div>
-                    <label htmlFor="image">Image:</label>
-                    <input type="text" name="image" id="image" value={image} onChange={imageHandler}/>
-                </div>
-                <div>
-                    <label htmlFor="name">Name:</label>
-                    <input type="text" name="name" id="name" value={name} onChange={nameHandler}/>
-                </div>
-                <div>
-                    <label htmlFor="price">Price:</label>
-                    <input type="number" name="price" id="price" value={price} onChange={priceHandler}/>
-                </div>
-                <div>
-                    <label htmlFor="description">Description:</label>
-                    <input type="text" name="description" id="description" value={description} onChange={descriptionHandler}/>
-                </div>
+    const dessertData = {
+      image,
+      name,
+      price: parseFloat(price),
+      description,
+    }
 
-                <button className='button-style' type='submit'>{editDessertData ? "Edit Dessert" : 'Add Dessert'}</button>
+    try {
+      if (editDessertData) {
+        api.put(`/desserts/${dessertId}`, dessertData)
+        console.log('Dessert updated successfully')
+      } else {
+        await api.post(`/desserts`, dessertData)
+        console.log('Dessert created successfully')
+      }
+    } catch (err) {
+      console.error('Error saving dessert:', err)
+      setError('Failed to save dessert')
+    }
+  }
 
-                {formError && <p>{formError}</p>}
-            </form>
+  return (
+    <div>
+      <form onSubmit={submitHandler}>
+        <div className="form-control">
+          <label htmlFor="image">Image:</label>
+          <input type="text" id="image" value={image} onChange={imageHandler} />
         </div>
-    )
+        <div className="form-control">
+          <label htmlFor="name">Name:</label>
+          <input type="text" id="name" value={name} onChange={nameHandler} />
+        </div>
+        <div className="form-control">
+          <label htmlFor="price">Price:</label>
+          <input type="number" id="price" value={price} onChange={priceHandler} />
+        </div>
+        <div className="form-control">
+          <label htmlFor="description">Description:</label>
+          <input type="text" id="description" value={description} onChange={descriptionHandler} />
+        </div>
+        <button type="submit">Update Dessert</button>
+        {error && <p className="error">{error}</p>}
+      </form>
+    </div>
+  )
 }
+
 export default DessertsForm
