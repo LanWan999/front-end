@@ -2,7 +2,7 @@ import axios from 'axios';
 import { User } from '../types/users';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://back-end-yaif.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   }
